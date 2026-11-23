@@ -1,6 +1,29 @@
-@Rentals.API_HostAddress = http://localhost:5015
+@Rentals.API_HostAddress = https://localhost:7194
 
 GET {{Rentals.API_HostAddress}}/weatherforecast/
 Accept: application/json
+
+###
+
+GET {{Rentals.API_HostAddress}}/api/users
+
+###
+
+POST {{Rentals.API_HostAddress}}/api/users
+Content-Type: application/json
+
+{
+  "UserName": "admin",
+  "Password": "1234"
+}
+
+###
+
+DELETE {{Rentals.API_HostAddress}}/api/users/{id}
+
+###
+
+@id=1
+GET {{Rentals.API_HostAddress}}/api/users/{{id}}
 
 ###
