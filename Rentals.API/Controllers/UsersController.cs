@@ -2,6 +2,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Rentals.API.Models;
 using Rentals.API.Data;
+using System.Data.Common;
+using Microsoft.Data.SqlClient;
 
 [Route("api/[controller]")]
 [ApiController]
@@ -76,8 +78,17 @@ public class UsersController : ControllerBase
             Password = request.Password
         };
 
-        _context.Users.Add(user);
-        await _context.SaveChangesAsync();
+        try
+        {
+            _context.Users.Add(user);
+            await _context.SaveChangesAsync();
+        }
+        catch(DbUpdateException dbUpdateEx) when (dbUpdateEx.InnerException is SqlException sqlEx &&
+                                  (sqlEx.Number == 2601 || sqlEx.Number == 2627))
+        {
+            if (dbUpdateEx.InnerException is SqlException)
+                return BadRequest("A user with the same username already exists.");
+        }
 
         return CreatedAtAction("GetUser", new { id = user.Id }, user);
     }

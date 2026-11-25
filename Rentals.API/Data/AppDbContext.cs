@@ -25,6 +25,8 @@ public partial class AppDbContext : DbContext
     {
         modelBuilder.Entity<User>(entity =>
         {
+            entity.HasIndex(e => e.UserName, "IX_Users").IsUnique();
+
             entity.Property(e => e.Password)
                 .HasMaxLength(50)
                 .IsUnicode(false);
